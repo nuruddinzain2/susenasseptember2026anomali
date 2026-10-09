@@ -1,97 +1,87 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cek Podes dangan Sensus Ekonomi 2026 · BPS Kota Banjarmasin</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📋%3C/text%3E%3C/svg%3E">
-<style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  html,body{
-    height:100%;width:100%;
-    background:#FFF9F3;
-    font-family:sans-serif;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .card{
-    max-width:420px;width:90%;
-    background:#fff;
-    border:1px solid #F0DCC8;
-    border-radius:16px;
-    padding:36px 28px;
-    text-align:center;
-    box-shadow:0 4px 20px rgba(140,90,56,.08);
-  }
-  .icon{font-size:44px;margin-bottom:14px}
-  h1{
-    font-size:18px;color:#8C5A38;margin-bottom:10px;
-    line-height:1.4;
-  }
-  p{
-    font-size:14px;color:#A9836A;margin-bottom:24px;
-    line-height:1.5;
-  }
-  .spinner{
-    width:34px;height:34px;
-    border:4px solid #F0DCC8;border-top-color:#C2410C;
-    border-radius:50%;
-    animation:spin .8s linear infinite;
-    margin:0 auto 20px;
-  }
-  @keyframes spin{to{transform:rotate(360deg)}}
-  a.btn{
-    display:inline-block;
-    background:#C2410C;color:#fff;
-    text-decoration:none;
-    font-weight:700;font-size:15px;
-    padding:12px 28px;
-    border-radius:10px;
-    transition:background .2s;
-  }
-  a.btn:hover{background:#A3350A}
-  .hint{
-    margin-top:16px;font-size:12px;color:#C7A88E;
-  }
-  .hidden{display:none}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi SE2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    #app-frame {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      display: block;
+      z-index: 1;
+    }
+
+    #loading-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      transition: opacity 0.3s ease;
+    }
+    #loading-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .loading-text {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #ffffff;
+      font-weight: 500;
+    }
+  </style>
 </head>
 <body>
 
-<div class="card">
-  <div id="waiting">
+  <div id="loading-overlay">
     <div class="spinner"></div>
-    <h1>Membuka aplikasi…</h1>
-    <p>Anda akan diarahkan otomatis ke aplikasi Cek Podes dan Sensus Ekonomi 2026.</p>
+    <div class="loading-text">Memuat halaman...</div>
   </div>
 
-  <div id="fallback" class="hidden">
-    <div class="icon">📋</div>
-    <h1>Buka Aplikasi Cek Podes SE2026</h1>
-    <p>Silakan buka lewat tombol di bawah.</p>
-    <a class="btn" id="openBtn" href="https://script.google.com/macros/s/AKfycbzutpfIew-zOL6fpMiPbq9tOewIAIL78NbaBh83yYYXtNI8oLnoMMlepY2fKktADfdr/exec" target="_blank" rel="noopener">
-      Buka Aplikasi
-    </a>
-    <div class="hint">Aplikasi akan terbuka di tab baru</div>
-  </div>
-</div>
-
-<script>
-  const APP_URL = "https://script.google.com/macros/s/AKfycbzDS64R4Kdki2up03vMDRvKucY8XOrto4Zt2fAXIh4eOW6UoiS9LauoZl-7C56BZGaH/exec";
-
-  // Coba buka otomatis di tab baru setelah jeda singkat
-  setTimeout(function () {
-    const win = window.open(APP_URL, "_blank");
-
-    document.getElementById('waiting').classList.add('hidden');
-    document.getElementById('fallback').classList.remove('hidden');
-
-    // Jika popup diblokir browser, tombol manual tetap tersedia
-    if (!win || win.closed || typeof win.closed === 'undefined') {
-      document.querySelector('.hint').textContent =
-        'Klik tombol di atas untuk membuka.';
-    }
-  }, 900);
-</script>
+  <!--
+    URL di bawah adalah URL deployment web app Apps Script Anda
+    (yang berakhiran /exec). Pastikan deployment sudah menggunakan
+    setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL) di
+    doGet(), supaya bisa dimuat di dalam iframe seperti ini.
+  -->
+  <iframe
+    id="app-frame"
+    src="https://script.google.com/macros/s/AKfycbzutpfIew-zOL6fpMiPbq9tOewIAIL78NbaBh83yYYXtNI8oLnoMMlepY2fKktADfdr/exec"
+    title="Aplikasi Anomali Susenas September 2026"
+    allow="clipboard-write"
+    onload="document.getElementById('loading-overlay').classList.add('hidden')">
+  </iframe>
 
 </body>
 </html>
+
+
